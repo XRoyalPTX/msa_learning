@@ -2,17 +2,15 @@ services:
   service_raw:
     build: ./service_raw
     ports:
-     - "n:n"
+     - "8010:8000"
+    environment:
+      - DB_HOST=db_raw
+      - DB_PORT=5432
+      - DB_NAME=db_raw
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
     depends_on:
       db_raw:
-        condition: service_healthy
-
-  service_normalized:
-    build: ./service_normalized
-    ports:
-     - "n:n"
-    depends_on:
-      db_normalized:
         condition: service_healthy
 
 
@@ -21,14 +19,29 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - name=value
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db_raw
     volumes:
       - pgdata_raw:/var/lib/postgresql/data
+    #  - ./scripts/seed_db.sql:/docker-entrypoint-initdb.d/seed_db.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       retries: 5
       timeout: 5s
+
+
+  service_normalized:
+    build: ./service_normalized
+    ports:
+     - "8011:8000"
+    environment:
+      - name=value
+    depends_on:
+      db_normalized:
+        condition: service_healthy
+  
 
   db_normalized:
     image: postgres:16-alpine

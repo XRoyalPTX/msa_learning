@@ -4,3 +4,4 @@ psycopg2-binary==2.9.10
 grpcio==1.68.0
 grpcio-tools==1.68.0
 protobuf==5.28.3
+python-dotenv==1.0.1
