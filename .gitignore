@@ -1,1 +1,20 @@
-pypcache/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Env / secrets
+.env
+
+# IDE
+.idea/
+.vscode/
+
+# Test / type-check caches
+.pytest_cache/
+.mypy_cache/
+
+# OS
+Thumbs.db

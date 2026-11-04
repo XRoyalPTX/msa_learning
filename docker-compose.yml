@@ -1,0 +1,49 @@
+services:
+  service_raw:
+    build: ./service_raw
+    ports:
+     - "n:n"
+    depends_on:
+      db_raw:
+        condition: service_healthy
+
+  service_normalized:
+    build: ./service_normalized
+    ports:
+     - "n:n"
+    depends_on:
+      db_normalized:
+        condition: service_healthy
+
+
+  db_raw:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - name=value
+    volumes:
+      - pgdata_raw:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+      timeout: 5s
+
+  db_normalized:
+    image: postgres:16-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      - name=value
+    volumes:
+      - pgdata_normalized:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+      timeout: 5s
+
+volumes:
+  pgdata_raw:
+  pgdata_normalized:
