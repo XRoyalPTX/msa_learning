@@ -11,6 +11,28 @@
 
 ---
 
+## Roadmap (прогресс)
+
+- [x] Структура репозитория: монорепо, изолированные папки сервисов
+- [x] Docker Compose: `db_raw` (postgres:16-alpine, volume, healthcheck, порт 5432)
+- [x] `service_raw/requirements.txt` (SQLAlchemy, Alembic, psycopg2-binary, grpcio, grpcio-tools)
+- [x] `service_raw/app/models.py` — модель `Nickname`
+- [x] `service_raw/app/db.py` — engine + Session, конфиг из `.env`
+- [x] `service_raw/.env` (DB_HOST/PORT/NAME/USER/PASSWORD)
+- [x] Alembic в `service_raw`: init, связка `env.py` с моделью, миграция создана и применена (`alembic upgrade head`)
+- [x] `scripts/seed_db.sql` — 1000 грязных строк в 5 категориях, залито в `db_raw`
+- [ ] Docker Compose: `db_normalized` (сейчас плейсхолдеры `name=value`)
+- [ ] `proto/nickname.proto` — контракт gRPC
+- [ ] Кодогенерация из `.proto` (`grpc_tools.protoc`)
+- [ ] `service_raw/app/main.py` — gRPC-сервер, ручка отдачи сырых данных
+- [ ] `service_normalized`: models.py, db.py, .env, Alembic-миграция
+- [ ] `service_normalized`: normalizer.py (правила нормализации/валидации), client.py (gRPC-клиент), main.py
+- [ ] Проверка end-to-end: грязные данные → gRPC → чистые в `db_normalized`
+- [ ] Dockerfile'ы для сервисов + запуск сервисов через compose
+- [ ] Полировка: автозапуск миграций при старте, retry-ожидание БД, логи
+
+---
+
 ## Этап 0. Структура репозитория (~30 мин, теория)
 
 Изучи, как устроен монорепозиторий с микросервисами. Да, каждый сервис живёт в своей папке и изолирован (свой код, свои зависимости, свой Alembic, своя БД). Docker тоже общий — он просто описывает инфраструктуру для обоих.
