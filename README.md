@@ -21,10 +21,10 @@
 - [x] `service_raw/.env` (DB_HOST/PORT/NAME/USER/PASSWORD)
 - [x] Alembic в `service_raw`: init, связка `env.py` с моделью, миграция создана и применена (`alembic upgrade head`)
 - [x] `scripts/seed_db.sql` — 1000 грязных строк в 5 категориях, залито в `db_raw`
-- [ ] Docker Compose: `db_normalized` (сейчас плейсхолдеры `name=value`)
-- [ ] `proto/nickname.proto` — контракт gRPC
-- [ ] Кодогенерация из `.proto` (`grpc_tools.protoc`)
-- [ ] `service_raw/app/main.py` — gRPC-сервер, ручка отдачи сырых данных
+- [x] Docker Compose: `db_normalized` (сейчас плейсхолдеры `name=value`) — ещё не настроен
+- [x] `proto/nicknames/nickname.proto` — контракт gRPC
+- [x] Кодогенерация из `.proto` (Python-стабы + Go-стабы)
+- [x] `service_raw/app/main.py` — gRPC-сервер, ручки `GetNickname` / `ListNicknames`, проверен Python-клиентом
 - [ ] `service_normalized` (**на Go**): layout, go.mod, models, .env, миграции (golang-migrate)
 - [ ] `service_normalized`: normalizer (правила нормализации/валидации), gRPC-клиент, main.go
 - [ ] Проверка end-to-end: грязные данные → gRPC (Python-сервер → Go-клиент) → чистые в `db_normalized`

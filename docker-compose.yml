@@ -48,7 +48,9 @@ services:
     ports:
       - "5433:5432"
     environment:
-      - name=value
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db_normalized
     volumes:
       - pgdata_normalized:/var/lib/postgresql/data
     healthcheck:
