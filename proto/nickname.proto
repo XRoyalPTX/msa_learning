@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package nicknames;
+
+option go_package = "service_normalized/internal/nicknamepb";
+
+service NicknameService {
+  rpc GetNickname (GetNicknameRequest) returns (GetNicknameResponse);
+  rpc ListNicknames (ListNicknamesRequest) returns (ListNicknamesResponse);
+}
+
+message Nickname {
+  int32 id = 1;
+  string nick = 2;
+}
+
+message GetNicknameRequest {
+  int32 id = 1;
+}
+
+message GetNicknameResponse {
+  Nickname nickname = 1;
+}
+
+message ListNicknamesRequest {
+
+}
+
+message ListNicknamesResponse {
+  repeated Nickname nicknames = 1;
+}
