@@ -21,22 +21,60 @@
 - [x] `service_raw/.env` (DB_HOST/PORT/NAME/USER/PASSWORD)
 - [x] Alembic в `service_raw`: init, связка `env.py` с моделью, миграция создана и применена (`alembic upgrade head`)
 - [x] `scripts/seed_db.sql` — 1000 грязных строк в 5 категориях, залито в `db_raw`
-- [x] Docker Compose: `db_normalized` (сейчас плейсхолдеры `name=value`) — ещё не настроен
+- [x] Docker Compose: `db_normalized` 
 - [x] `proto/nicknames/nickname.proto` — контракт gRPC
 - [x] Кодогенерация из `.proto` (Python-стабы + Go-стабы)
 - [x] `service_raw/app/main.py` — gRPC-сервер, ручки `GetNickname` / `ListNicknames`, проверен Python-клиентом
 - [ ] `service_normalized` (**на Go**): layout, go.mod, models, .env, миграции (golang-migrate)
 - [ ] `service_normalized`: normalizer (правила нормализации/валидации), gRPC-клиент, main.go
 - [ ] Проверка end-to-end: грязные данные → gRPC (Python-сервер → Go-клиент) → чистые в `db_normalized`
-- [ ] Проверка end-to-end: грязные данные → gRPC → чистые в `db_normalized`
 - [ ] Dockerfile'ы для сервисов + запуск сервисов через compose
 - [ ] Полировка: автозапуск миграций при старте, retry-ожидание БД, логи
 
 ---
 
+## Структура репозитория (актуальная)
+
+```
+msa_learning/
+├── docker-compose.yml              # общий: db_raw + db_normalized (+ позже сами сервисы)
+├── .env                            # env для compose
+├── proto/
+│   └── nicknames/
+│       └── nickname.proto          # контракт gRPC, общий для обоих сервисов
+├── scripts/
+│   └── seed_db.sql                 # SQL-скрипт: грязные данные для db_raw
+├── service_raw/                    # сервис 1 (Python): хранит сырые данные, gRPC-СЕРВЕР
+│   ├── app/
+│   │   ├── main.py                 # gRPC-сервер (NicknameService + serve())
+│   │   ├── models.py               # SQLAlchemy-модель Nickname
+│   │   ├── db.py                   # engine + Session, конфиг из .env
+│   │   └── test_client.py          # (временный, для ручной проверки)
+│   ├── nicknames/                  # СГЕНЕРИРОВАНО из proto, не редактировать
+│   │   ├── nickname_pb2.py         # сообщения
+│   │   └── nickname_pb2_grpc.py    # сервисер + клиентский stub
+│   ├── alembic/                    # миграции сервиса 1
+│   │   └── versions/
+│   ├── alembic.ini
+│   ├── .env                        # DB_HOST/PORT/NAME/USER/PASSWORD
+│   ├── requirements.txt
+│   └── Dockerfile                  # (на финальном этапе)
+├── service_normalized/             # сервис 2 (Go): gRPC-КЛИЕНТ + нормализация
+│   ├── internal/
+│   │   └── nicknamepb/             # СГЕНЕРИРОВАНО из proto, не редактировать
+│   │       ├── nickname.pb.go      # сообщения
+│   │       └── nickname_grpc.pb.go # клиентский stub
+│   ├── .env
+│   ├── go.mod                      # зависимости + tool-инструменты (protoc-плагины)
+│   ├── go.sum
+│   └── Dockerfile
+└── README.md
+```
+
 Ключевые идеи:
-- `proto/` на уровне корня, потому что **контракт общий**: сервер и клиент генерируют код из одного `.proto`-файла.
-- У сервисов разные `requirements.txt` — независимые зависимости.
+- `proto/` на уровне корня, потому что **контракт общий**: обе стороны генерируют код из одного `.proto`-файла.
+- Папки со сгенерированным кодом (`nicknames/`, `internal/nicknamepb/`) не редактируют руками — только перегенерируют.
+- У сервисов разные стеки и независимые зависимости (`requirements.txt` vs `go.mod`).
 - Никакого импорта кода сервиса 1 из сервиса 2 — связь только по gRPC.
 
 ## Этап 1. Docker (~2-3 часа)
