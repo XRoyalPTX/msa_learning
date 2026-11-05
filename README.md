@@ -25,8 +25,9 @@
 - [ ] `proto/nickname.proto` — контракт gRPC
 - [ ] Кодогенерация из `.proto` (`grpc_tools.protoc`)
 - [ ] `service_raw/app/main.py` — gRPC-сервер, ручка отдачи сырых данных
-- [ ] `service_normalized`: models.py, db.py, .env, Alembic-миграция
-- [ ] `service_normalized`: normalizer.py (правила нормализации/валидации), client.py (gRPC-клиент), main.py
+- [ ] `service_normalized` (**на Go**): layout, go.mod, models, .env, миграции (golang-migrate)
+- [ ] `service_normalized`: normalizer (правила нормализации/валидации), gRPC-клиент, main.go
+- [ ] Проверка end-to-end: грязные данные → gRPC (Python-сервер → Go-клиент) → чистые в `db_normalized`
 - [ ] Проверка end-to-end: грязные данные → gRPC → чистые в `db_normalized`
 - [ ] Dockerfile'ы для сервисов + запуск сервисов через compose
 - [ ] Полировка: автозапуск миграций при старте, retry-ожидание БД, логи
