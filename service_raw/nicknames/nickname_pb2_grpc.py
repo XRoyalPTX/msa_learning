@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import nickname_pb2 as nickname__pb2
+from nicknames import nickname_pb2 as nicknames_dot_nickname__pb2
 
 GRPC_GENERATED_VERSION = '1.68.0'
 GRPC_VERSION = grpc.__version__
@@ -18,7 +18,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in nickname_pb2_grpc.py depends on'
+        + f' but the generated code in nicknames/nickname_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -36,13 +36,13 @@ class NicknameServiceStub(object):
         """
         self.GetNickname = channel.unary_unary(
                 '/nicknames.NicknameService/GetNickname',
-                request_serializer=nickname__pb2.GetNicknameRequest.SerializeToString,
-                response_deserializer=nickname__pb2.GetNicknameResponse.FromString,
+                request_serializer=nicknames_dot_nickname__pb2.GetNicknameRequest.SerializeToString,
+                response_deserializer=nicknames_dot_nickname__pb2.GetNicknameResponse.FromString,
                 _registered_method=True)
         self.ListNicknames = channel.unary_unary(
                 '/nicknames.NicknameService/ListNicknames',
-                request_serializer=nickname__pb2.ListNicknamesRequest.SerializeToString,
-                response_deserializer=nickname__pb2.ListNicknamesResponse.FromString,
+                request_serializer=nicknames_dot_nickname__pb2.ListNicknamesRequest.SerializeToString,
+                response_deserializer=nicknames_dot_nickname__pb2.ListNicknamesResponse.FromString,
                 _registered_method=True)
 
 
@@ -66,13 +66,13 @@ def add_NicknameServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetNickname': grpc.unary_unary_rpc_method_handler(
                     servicer.GetNickname,
-                    request_deserializer=nickname__pb2.GetNicknameRequest.FromString,
-                    response_serializer=nickname__pb2.GetNicknameResponse.SerializeToString,
+                    request_deserializer=nicknames_dot_nickname__pb2.GetNicknameRequest.FromString,
+                    response_serializer=nicknames_dot_nickname__pb2.GetNicknameResponse.SerializeToString,
             ),
             'ListNicknames': grpc.unary_unary_rpc_method_handler(
                     servicer.ListNicknames,
-                    request_deserializer=nickname__pb2.ListNicknamesRequest.FromString,
-                    response_serializer=nickname__pb2.ListNicknamesResponse.SerializeToString,
+                    request_deserializer=nicknames_dot_nickname__pb2.ListNicknamesRequest.FromString,
+                    response_serializer=nicknames_dot_nickname__pb2.ListNicknamesResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -100,8 +100,8 @@ class NicknameService(object):
             request,
             target,
             '/nicknames.NicknameService/GetNickname',
-            nickname__pb2.GetNicknameRequest.SerializeToString,
-            nickname__pb2.GetNicknameResponse.FromString,
+            nicknames_dot_nickname__pb2.GetNicknameRequest.SerializeToString,
+            nicknames_dot_nickname__pb2.GetNicknameResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -127,8 +127,8 @@ class NicknameService(object):
             request,
             target,
             '/nicknames.NicknameService/ListNicknames',
-            nickname__pb2.ListNicknamesRequest.SerializeToString,
-            nickname__pb2.ListNicknamesResponse.FromString,
+            nicknames_dot_nickname__pb2.ListNicknamesRequest.SerializeToString,
+            nicknames_dot_nickname__pb2.ListNicknamesResponse.FromString,
             options,
             channel_credentials,
             insecure,
